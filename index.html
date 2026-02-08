@@ -3,57 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bar SPEC - Whiskey Matrix</title>
+    <title>Bar SPEC - Amber Palette Matrix</title>
     <style>
-        /* 基本のアンバー＆ゴールドスタイルは継承 */
         body { 
             display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; 
-            background: radial-gradient(circle at center, #8b6b23 0%, #1a1200 100%); 
-            color: #eee; font-family: sans-serif; 
+            background: radial-gradient(circle at center, #4d3b12 0%, #000000 100%); 
+            color: #eee; font-family: 'Helvetica Neue', Arial, sans-serif; 
         }
+        /* メインタイトル：Amber Paletteを際立たせる */
+        .header-title {
+            margin-top: 40px; color: #d4af37; font-size: 1.6em; letter-spacing: 5px; font-weight: 100; text-align: center;
+        }
+        /* 奥ゆかしいロゴ：右下に小さく配置 */
+        .modest-logo {
+            position: fixed; bottom: 20px; right: 20px; width: 70px; opacity: 0.6; transition: 0.3s; z-index: 1000;
+        }
+        .modest-logo:hover { opacity: 1.0; width: 80px; }
 
-        /* 切り替えスイッチのデザイン（グラスモーフィズム） */
         .mode-switcher {
-            display: flex; background: rgba(0, 0, 0, 0.4); border-radius: 30px; 
-            padding: 5px; margin: 10px 0; border: 1px solid rgba(212, 175, 55, 0.3);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex; background: rgba(212, 175, 55, 0.1); border-radius: 30px; 
+            padding: 5px; margin: 20px 0; border: 1px solid rgba(212, 175, 55, 0.4);
         }
         .mode-btn {
-            padding: 8px 20px; border-radius: 25px; cursor: pointer; border: none;
-            background: transparent; color: #aaa; font-weight: bold; transition: 0.3s;
-            font-size: 14px;
+            padding: 8px 25px; border-radius: 25px; cursor: pointer; border: none;
+            background: transparent; color: #d4af37; font-weight: bold; transition: 0.3s; font-size: 12px;
         }
-        .mode-btn.active {
-            background: linear-gradient(to bottom, #d4af37, #a88a2d); color: #000;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-        }
+        .mode-btn.active { background: linear-gradient(to bottom, #d4af37, #a88a2d); color: #000; }
 
-        /* マトリックスボード周辺 */
-        .matrix-container { position: relative; margin: 50px 0; }
+        .matrix-container { position: relative; margin: 40px auto 80px; }
         .matrix-board { 
-            position: relative; width: min(85vw, 650px); aspect-ratio: 1/1; border: 2px solid #d4af37;
-            background-color: #fff; background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
-            background-size: 5% 5%, 5% 5%; box-shadow: 0 0 50px rgba(0,0,0,0.8); overflow: visible;
+            position: relative; width: min(88vw, 620px); aspect-ratio: 1/1; border: 1px solid #d4af37;
+            background-color: rgba(255,255,255,0.02); 
+            background-image: linear-gradient(rgba(212,175,55,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,0.05) 1px, transparent 1px);
+            background-size: 5% 5%; box-shadow: 0 0 60px rgba(0,0,0,0.8);
         }
+        .axis-label { position: absolute; font-size: 12px; color: #d4af37; background: rgba(0,0,0,0.8); padding: 4px 15px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.4); z-index: 5; text-transform: uppercase; letter-spacing: 2px; }
+        .label-top { top: -35px; left: 50%; transform: translateX(-50%); }
+        .label-bottom { bottom: -35px; left: 50%; transform: translateX(-50%); }
+        .label-left { left: -75px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+        .label-right { right: -75px; top: 50%; transform: translateY(-50%) rotate(90deg); }
 
-        /* 軸ラベルなど前回までのスタイルを継続 */
-        .axis-label { position: absolute; font-weight: 700; font-size: 12px; color: #fff; background: rgba(0, 0, 0, 0.75); padding: 5px 15px; border-radius: 30px; border: 1px solid #d4af37; white-space: nowrap; z-index: 3; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-        .label-top { top: -45px; left: 50%; transform: translateX(-50%); }
-        .label-bottom { bottom: -45px; left: 50%; transform: translateX(-50%); }
-        .label-left { left: -100px; top: 50%; transform: translateY(-50%); }
-        .label-right { right: -100px; top: 50%; transform: translateY(-50%); }
-
-        .bottle { position: absolute; transform: translate(-50%, -50%); text-align: center; width: 80px; cursor: pointer; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); z-index: 10; }
-        .bottle:hover { transform: translate(-50%, -50%) scale(1.2) translateY(-10px); z-index: 100; }
-        .bottle img { width: 45px; height: auto; filter: drop-shadow(0 8px 15px rgba(0,0,0,0.5)); }
-        .label { display: block; background: rgba(20, 20, 20, 0.9); color: #d4af37; font-size: 10px; padding: 3px; border-radius: 4px; margin-top: 5px; border: 1px solid rgba(212, 175, 55, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bottle { position: absolute; transform: translate(-50%, -50%); text-align: center; width: 70px; transition: all 0.5s ease; z-index: 10; cursor: pointer; }
+        .bottle img { width: 40px; height: auto; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.7)); }
+        .label { display: block; background: rgba(0, 0, 0, 0.8); color: #d4af37; font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-top: 4px; border: 1px solid rgba(212,175,55,0.3); white-space: nowrap; }
+        
+        .standard-label { background: #d4af37; color: #000; font-weight: bold; border: none; }
     </style>
 </head>
 <body>
 
-    <div style="margin-top:20px; text-align:center;">
-        <b style="color:#d4af37; font-size: 1.5em; letter-spacing: 3px;">Bar SPEC</b>
-    </div>
+    <div class="header-title">AMBER PALETTE</div>
+
+    <img src="logo.png" class="modest-logo" onerror="this.style.display='none'">
 
     <div class="mode-switcher">
         <button id="btn-official" class="mode-btn active" onclick="changeMode('official')">OFFICIAL</button>
@@ -65,70 +66,63 @@
         <div class="axis-label label-bottom">Delicate</div>
         <div class="axis-label label-left">Light</div>
         <div class="axis-label label-right">Rich</div>
-
-        <div class="matrix-board" id="board">
-            <div id="loader" style="color:#d4af37; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">Loading...</div>
-        </div>
+        <div class="matrix-board" id="board"></div>
     </div>
 
     <script>
-const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbx51HrKxlznQvPRSHvCa__Vgof6QBY1jsKHl2e4RtoAIhlBWHBH6Srq36hiQy0G2xB_tQ/exec";
+        const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbx51HrKxlznQvPRSHvCa__Vgof6QBY1jsKHl2e4RtoAIhlBWHBH6Srq36hiQy0G2xB_tQ/exec";
         let currentMode = 'official';
 
-        // モードを切り替える関数
         function changeMode(mode) {
             currentMode = mode;
-            // ボタンの見た目を更新
             document.getElementById('btn-official').classList.toggle('active', mode === 'official');
             document.getElementById('btn-draft').classList.toggle('active', mode === 'draft');
-            // データを再読み込み
             loadData();
         }
 
         async function loadData() {
             const board = document.getElementById('board');
-            board.innerHTML = '<div style="color:#d4af37; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">Loading...</div>';
-
-            // モードに合わせてURLを生成
+            board.innerHTML = '<div style="color:#d4af37; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; letter-spacing:2px;">Updating...</div>';
             const fetchUrl = currentMode === 'official' ? `${GAS_BASE_URL}?mode=official` : GAS_BASE_URL;
 
             try {
                 const response = await fetch(fetchUrl);
-                const bottlesData = await response.json();
-                render(bottlesData);
+                const data = await response.json();
+                render(data);
             } catch (e) {
-                board.innerHTML = '<div style="color:red;">Failed to load data.</div>';
+                board.innerHTML = '<div style="color:#ff4444; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">Connection Error</div>';
             }
         }
 
         function render(data) {
             const board = document.getElementById('board');
             board.innerHTML = `
-                <div style="position:absolute; width:100%; height:1px; top:50%; left:0; background:rgba(0,0,0,0.1);"></div>
-                <div style="position:absolute; height:100%; width:1px; left:50%; top:0; background:rgba(0,0,0,0.1);"></div>
+                <div style="position:absolute; width:100%; height:1px; top:50%; left:0; background:rgba(212,175,55,0.2);"></div>
+                <div style="position:absolute; height:100%; width:1px; left:50%; top:0; background:rgba(212,175,55,0.2);"></div>
             `;
 
+            // 【基準点】山崎を中心(0,0)に配置
+            const standard = document.createElement('div');
+            standard.className = 'bottle';
+            standard.style.left = '50%'; standard.style.top = '50%';
+            standard.innerHTML = `<img src="JAPANESE/yamazaki.png" onerror="this.src='https://via.placeholder.com/40x80?text=Yamazaki'"><span class="label standard-label">Standard: 山崎</span>`;
+            board.appendChild(standard);
+
+            // 【データ表示】
             data.forEach(whiskey => {
                 const bottleEl = document.createElement('div');
                 bottleEl.className = 'bottle';
                 bottleEl.style.left = (50 + Number(whiskey.rich)) + '%';
                 bottleEl.style.top = (50 - Number(whiskey.smoky)) + '%';
-
-                // OfficialモードとEveryoneモードでラベルの色や透明度を変える「粋」な演出
-                let extraStyle = "";
-                if (currentMode === 'draft' && whiskey.role === '愛好家') {
-                    bottleEl.style.opacity = "0.7"; // 自動版の愛好家データは少し透かす
-                }
-
-                bottleEl.innerHTML = `
-                    <img src="${whiskey.image || 'https://via.placeholder.com/45x90/332200/d4af37?text=Whisky'}">
-                    <span class="label" style="${extraStyle}">${whiskey.brand}</span>
-                `;
+                
+                const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.png';
+                bottleEl.innerHTML = `<img src="${imgSrc}" onerror="this.src='https://via.placeholder.com/40x80?text=BarSPEC'"><span class="label">${whiskey.brand}</span>`;
+                bottleEl.onclick = () => { if(whiskey.note) alert(whiskey.brand + "\n\n" + whiskey.note); };
                 board.appendChild(bottleEl);
             });
         }
-
         window.onload = loadData;
+        setInterval(loadData, 60000); 
     </script>
 </body>
 </html>
