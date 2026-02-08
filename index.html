@@ -1,2 +1,134 @@
-<!DOCTYPE html><html lang='ja'><head><meta charset='Shift_JIS'><style>body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; background: #111; color: #eee; font-family: sans-serif; }.controls { background: #222; padding: 15px; border-radius: 10px; margin: 20px; display: flex; gap: 20px; align-items: center; border: 1px solid #444; z-index: 100; }.matrix-board { position: relative; width: 800px; height: 800px; background-color: #fff; background-image: url('Matrix�@���S.png'); background-size: contain; border: 2px solid #555; }.bottle { position: absolute; transform: translate(-50%, -50%); text-align: center; width: 80px; cursor: pointer; transition: transform 0.4s ease; z-index: 10; }.bottle img { width: 48px; height: auto; filter: drop-shadow(0 5px 12px rgba(0,0,0,0.4)); }.label { display: inline-block; background: rgba(0,0,0,0.8); color: #fff; font-size: 11px; padding: 2px 5px; border-radius: 4px; margin-top: 5px; border: 0.5px solid #d4af37; }.logo-watermark { position: absolute; bottom: 20px; right: 20px; width: 75px; opacity: 0.3; pointer-events: none; z-index: 5; }#modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }.modal-content { background: #1a1a1a; border: 2px solid #d4af37; padding: 40px; border-radius: 20px; max-width: 450px; text-align: center; }</style></head><body><div class='controls'><b>Bar SPEC</b> ����: <input type='text' id='search' oninput='filter()'> �G���A: <select id='areaSel' onchange='filter()'><option value='all'>ALL AREA</option><option value='JAPANESE'>JAPANESE</option></select></div>
-<div class='matrix-board'><img src='logo.png' class='logo-watermark'><div class='bottle' onclick="handleBottleClick(this, '�R�� (�)','JAPANESE','JAPANESE\yamazaki.png','���{�̃E�C�X�L�[�̌��_�B�~�Y�i���R���́c')" data-brand='�R�� (�)' data-area='JAPANESE' data-x='50' data-y='50' style='left:50%; top:50%;'><img src='JAPANESE\yamazaki.png'><span class='label'>�R�� (�)</span></div><div class='bottle' onclick="handleBottleClick(this, '�]�s','JAPANESE','JAPANESE\yoichi_.png','')" data-brand='�]�s' data-area='JAPANESE' data-x='40' data-y='10' style='left:40%; top:10%;'><img src='JAPANESE\yoichi_.png'><span class='label'>�]�s</span></div><div class='bottle' onclick="handleBottleClick(this, '���B','JAPANESE','JAPANESE\hakusyu.png','')" data-brand='���B' data-area='JAPANESE' data-x='70' data-y='35' style='left:70%; top:35%;'><img src='JAPANESE\hakusyu.png'><span class='label'>���B</span></div><div class='bottle' onclick="handleBottleClick(this, '��','JAPANESE','JAPANESE\hibiki.png','')" data-brand='��' data-area='JAPANESE' data-x='60' data-y='40' style='left:60%; top:40%;'><img src='JAPANESE\hibiki.png'><span class='label'>��</span></div><div class='bottle' onclick="handleBottleClick(this, '�{�鋬','JAPANESE','JAPANESE\miyagikyo.png','')" data-brand='�{�鋬' data-area='JAPANESE' data-x='40' data-y='60' style='left:40%; top:60%;'><img src='JAPANESE\miyagikyo.png'><span class='label'>�{�鋬</span></div></div><div id='modal' onclick='closeModal()'><div class='modal-content' onclick='event.stopPropagation()'><img id='m-img' style='width:140px;margin-bottom:20px;'><div id='m-title' style='font-size:26px;color:#d4af37;margin-bottom:10px;'></div><div id='m-memo' style='text-align:left;color:#ddd;line-height:1.6;'></div></div></div><script>let expG = null;function handleBottleClick(el, t, a, i, m) {  const x = el.dataset.x, y = el.dataset.y;  const sibs = Array.from(document.querySelectorAll('.bottle')).filter(b => b.dataset.x === x && b.dataset.y === y && b.style.display !== 'none');  if (sibs.length > 1 && !el.classList.contains('is-exp')) { expand(sibs); } else { openM(t, i, m); }}function expand(g) {  const r = 85, c = g.length;  g.forEach((b, idx) => {    const ang = (idx * (360 / c)) * (Math.PI / 180);    const tx = Math.cos(ang) * r, ty = Math.sin(ang) * r;    b.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.15)`;    b.classList.add('is-exp'); b.style.zIndex = 100;  }); expG = g;}function resetExp() { if(expG) expG.forEach(b => { b.style.transform = 'translate(-50%, -50%)'; b.classList.remove('is-exp'); b.style.zIndex = 10; }); expG = null; }document.addEventListener('click', (e) => { if(!e.target.closest('.bottle')) resetExp(); });function openM(t, i, m){ document.getElementById('m-title').innerText=t; document.getElementById('m-img').src=i; document.getElementById('m-memo').innerHTML=m; document.getElementById('modal').style.display='flex'; }function closeModal(){ document.getElementById('modal').style.display='none'; }function filter(){ const s=document.getElementById('search').value.toLowerCase(), a=document.getElementById('areaSel').value; document.querySelectorAll('.bottle').forEach(b=>{ const mS=b.dataset.brand.toLowerCase().includes(s), mA=(a==='all'||b.dataset.area===a); b.style.display=(mS&&mA)?'block':'none'; }); resetExp(); }</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar SPEC - Whiskey Matrix</title>
+    <style>
+        /* 基本のアンバー＆ゴールドスタイルは継承 */
+        body { 
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; 
+            background: radial-gradient(circle at center, #8b6b23 0%, #1a1200 100%); 
+            color: #eee; font-family: sans-serif; 
+        }
+
+        /* 切り替えスイッチのデザイン（グラスモーフィズム） */
+        .mode-switcher {
+            display: flex; background: rgba(0, 0, 0, 0.4); border-radius: 30px; 
+            padding: 5px; margin: 10px 0; border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .mode-btn {
+            padding: 8px 20px; border-radius: 25px; cursor: pointer; border: none;
+            background: transparent; color: #aaa; font-weight: bold; transition: 0.3s;
+            font-size: 14px;
+        }
+        .mode-btn.active {
+            background: linear-gradient(to bottom, #d4af37, #a88a2d); color: #000;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        /* マトリックスボード周辺 */
+        .matrix-container { position: relative; margin: 50px 0; }
+        .matrix-board { 
+            position: relative; width: min(85vw, 650px); aspect-ratio: 1/1; border: 2px solid #d4af37;
+            background-color: #fff; background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 5% 5%, 5% 5%; box-shadow: 0 0 50px rgba(0,0,0,0.8); overflow: visible;
+        }
+
+        /* 軸ラベルなど前回までのスタイルを継続 */
+        .axis-label { position: absolute; font-weight: 700; font-size: 12px; color: #fff; background: rgba(0, 0, 0, 0.75); padding: 5px 15px; border-radius: 30px; border: 1px solid #d4af37; white-space: nowrap; z-index: 3; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+        .label-top { top: -45px; left: 50%; transform: translateX(-50%); }
+        .label-bottom { bottom: -45px; left: 50%; transform: translateX(-50%); }
+        .label-left { left: -100px; top: 50%; transform: translateY(-50%); }
+        .label-right { right: -100px; top: 50%; transform: translateY(-50%); }
+
+        .bottle { position: absolute; transform: translate(-50%, -50%); text-align: center; width: 80px; cursor: pointer; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); z-index: 10; }
+        .bottle:hover { transform: translate(-50%, -50%) scale(1.2) translateY(-10px); z-index: 100; }
+        .bottle img { width: 45px; height: auto; filter: drop-shadow(0 8px 15px rgba(0,0,0,0.5)); }
+        .label { display: block; background: rgba(20, 20, 20, 0.9); color: #d4af37; font-size: 10px; padding: 3px; border-radius: 4px; margin-top: 5px; border: 1px solid rgba(212, 175, 55, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    </style>
+</head>
+<body>
+
+    <div style="margin-top:20px; text-align:center;">
+        <b style="color:#d4af37; font-size: 1.5em; letter-spacing: 3px;">Bar SPEC</b>
+    </div>
+
+    <div class="mode-switcher">
+        <button id="btn-official" class="mode-btn active" onclick="changeMode('official')">OFFICIAL</button>
+        <button id="btn-draft" class="mode-btn" onclick="changeMode('draft')">EVERYONE'S</button>
+    </div>
+
+    <div class="matrix-container">
+        <div class="axis-label label-top">Smoky</div>
+        <div class="axis-label label-bottom">Delicate</div>
+        <div class="axis-label label-left">Light</div>
+        <div class="axis-label label-right">Rich</div>
+
+        <div class="matrix-board" id="board">
+            <div id="loader" style="color:#d4af37; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbx51HrKxlznQvPRSHvCa__Vgof6QBY1jsKHl2e4RtoAIhlBWHBH6Srq36hiQy0G2xB_tQ/exec";
+        let currentMode = 'official';
+
+        // モードを切り替える関数
+        function changeMode(mode) {
+            currentMode = mode;
+            // ボタンの見た目を更新
+            document.getElementById('btn-official').classList.toggle('active', mode === 'official');
+            document.getElementById('btn-draft').classList.toggle('active', mode === 'draft');
+            // データを再読み込み
+            loadData();
+        }
+
+        async function loadData() {
+            const board = document.getElementById('board');
+            board.innerHTML = '<div style="color:#d4af37; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">Loading...</div>';
+
+            // モードに合わせてURLを生成
+            const fetchUrl = currentMode === 'official' ? `${GAS_BASE_URL}?mode=official` : GAS_BASE_URL;
+
+            try {
+                const response = await fetch(fetchUrl);
+                const bottlesData = await response.json();
+                render(bottlesData);
+            } catch (e) {
+                board.innerHTML = '<div style="color:red;">Failed to load data.</div>';
+            }
+        }
+
+        function render(data) {
+            const board = document.getElementById('board');
+            board.innerHTML = `
+                <div style="position:absolute; width:100%; height:1px; top:50%; left:0; background:rgba(0,0,0,0.1);"></div>
+                <div style="position:absolute; height:100%; width:1px; left:50%; top:0; background:rgba(0,0,0,0.1);"></div>
+            `;
+
+            data.forEach(whiskey => {
+                const bottleEl = document.createElement('div');
+                bottleEl.className = 'bottle';
+                bottleEl.style.left = (50 + Number(whiskey.rich)) + '%';
+                bottleEl.style.top = (50 - Number(whiskey.smoky)) + '%';
+
+                // OfficialモードとEveryoneモードでラベルの色や透明度を変える「粋」な演出
+                let extraStyle = "";
+                if (currentMode === 'draft' && whiskey.role === '愛好家') {
+                    bottleEl.style.opacity = "0.7"; // 自動版の愛好家データは少し透かす
+                }
+
+                bottleEl.innerHTML = `
+                    <img src="${whiskey.image || 'https://via.placeholder.com/45x90/332200/d4af37?text=Whisky'}">
+                    <span class="label" style="${extraStyle}">${whiskey.brand}</span>
+                `;
+                board.appendChild(bottleEl);
+            });
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>
