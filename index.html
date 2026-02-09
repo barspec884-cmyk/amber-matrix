@@ -29,24 +29,105 @@
         .mode-btn.active { background: linear-gradient(to bottom, #d4af37, #a88a2d); color: #000; }
 
         .matrix-container { position: relative; margin: 40px auto 80px; }
-        .matrix-board { 
-            position: relative; width: min(88vw, 620px); aspect-ratio: 1/1; border: 1px solid #d4af37;
-            background-color: #fdf5e6; /* シャンパンイエロー */
-            background-image: 
-                linear-gradient(rgba(184, 134, 11, 0.08) 1px, transparent 1px), 
-                linear-gradient(90deg, rgba(184, 134, 11, 0.08) 1px, transparent 1px);
-            background-size: 5% 5%; box-shadow: 0 0 60px rgba(0,0,0,0.8);
-        }
+/* ボード：画面幅の90%を維持 */
+.matrix-board { 
+    position: relative; 
+    width: min(90vw, 620px); 
+    aspect-ratio: 1/1; 
+    border: 1px solid #d4af37;
+    background-color: #fdf5e6; 
+    background-image: 
+        linear-gradient(rgba(184, 134, 11, 0.08) 1px, transparent 1px), 
+        linear-gradient(90deg, rgba(184, 134, 11, 0.08) 1px, transparent 1px);
+    background-size: 5% 5%; 
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+    overflow: hidden; /* ラベルやボトルがはみ出さないようにガード */
+}
 
-        .axis-label { position: absolute; font-size: 11px; color: #d4af37; background: rgba(0,0,0,0.85); padding: 4px 15px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.4); z-index: 5; text-transform: uppercase; letter-spacing: 3px; }
-        .label-top { top: -35px; left: 50%; transform: translateX(-50%); }
-        .label-bottom { bottom: -35px; left: 50%; transform: translateX(-50%); }
-        .label-left { left: -70px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
-        .label-right { right: -70px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+/* ラベル共通：内側に配置するため背景を透過・ボカしに変更 */
+.axis-label {
+    position: absolute;
+    pointer-events: none; 
+    z-index: 50; /* ボトルより上に表示 */
+    color: #d4af37;
+    background: rgba(0, 0, 0, 0.6); 
+    backdrop-filter: blur(4px); /* 背景をボカして可読性アップ */
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+    font-size: 10px;
+}
 
-        .bottle { position: absolute; transform: translate(-50%, -50%); text-align: center; width: 70px; transition: all 0.5s ease; z-index: 10; cursor: pointer; }
-        .bottle img { width: 40px; height: auto; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); }
-        .label { display: block; background: rgba(0, 0, 0, 0.85); color: #d4af37; font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-top: 4px; border: 1px solid rgba(212,175,55,0.3); white-space: nowrap; font-family: sans-serif; }
+/* 上ラベル：ボードの「上枠」に埋め込む */
+.label-top { 
+    top: 0; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    padding: 3px 20px; 
+    border-radius: 0 0 10px 10px; /* 下側だけ丸くして、枠から生えているように見せる */
+    border-top: none; /* 枠線と一体化させる */
+}
+
+/* 下ラベル：ボードの「下枠」に埋め込む */
+.label-bottom { 
+    bottom: 0; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    padding: 3px 20px; 
+    border-radius: 10px 10px 0 0; /* 上側だけ丸くする */
+    border-bottom: none;
+}
+
+/* 左右ラベル：縦書きにしてボードの内側両端に配置 */
+.label-left { 
+    left: 0; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    writing-mode: vertical-rl; 
+    text-orientation: upright;
+    padding: 15px 3px;
+    border-radius: 0 8px 8px 0;
+}
+
+.label-right { 
+    right: 0; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    writing-mode: vertical-rl; 
+    text-orientation: upright;
+    padding: 15px 3px;
+    border-radius: 8px 0 0 8px;
+}
+
+/* bottleの幅を少し絞る */
+.bottle { 
+    position: absolute; 
+    transform: translate(-50%, -50%); 
+    text-align: center; 
+    width: 50px; /* 70pxから縮小 */
+    transition: all 0.5s ease; 
+    z-index: 10; 
+}
+
+/* 画像サイズを200件対応用に小さく */
+.bottle img { 
+    width: 25px; /* ここを40pxから25pxへ */
+    height: auto; 
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); 
+}
+
+/* ラベルの文字も少しだけ小さくして、重なりを減らす */
+.label { 
+    display: block; 
+    background: rgba(0, 0, 0, 0.85); 
+    color: #d4af37; 
+    font-size: 9px; /* 10pxから縮小 */
+    padding: 1px 4px; 
+    border-radius: 2px; 
+    margin-top: 2px; 
+    border: 1px solid rgba(212,175,55,0.3); 
+    white-space: nowrap; 
+}
         
         /* 【重要】Benchmark（山崎）を薄くする設定 */
         .benchmark-bottle { z-index: 1 !important; opacity: 0.25; filter: grayscale(0.5); pointer-events: none; }
@@ -119,11 +200,22 @@ const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxOyZZfvdOWhTfdjVl
                 
                 const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.png';
                 bottleEl.innerHTML = `<img src="${imgSrc}" onerror="this.src='https://via.placeholder.com/40x80?text=BarSPEC'"><span class="label">${whiskey.brand}</span>`;
-                bottleEl.onclick = () => { if(whiskey.note) alert(whiskey.brand + "\n\nRecommend:\n" + whiskey.note); };
-                board.appendChild(bottleEl);
-            });
-        }
-        window.onload = loadData;
+bottleEl.onclick = () => { 
+    // 他のボトルの強調をリセット
+    document.querySelectorAll('.bottle').forEach(b => {
+        b.style.zIndex = "10";
+        b.style.transform = "translate(-50%, -50%) scale(1)";
+    });
+    
+    // 選んだボトルを最前面に出して、少し大きくする
+    bottleEl.style.zIndex = "100";
+    bottleEl.style.transform = "translate(-50%, -50%) scale(1.5)";
+
+    if(whiskey.note) {
+        // 確認をスムーズにするため、少し丁寧なアラートに
+        alert("【" + whiskey.brand + "】\n位置を確認しました。\n\nNote: " + whiskey.note); 
+    }
+};dow.onload = loadData;
         setInterval(loadData, 60000); 
     </script>
 </body>
