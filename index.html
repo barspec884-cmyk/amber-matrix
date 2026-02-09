@@ -152,9 +152,8 @@
         <div class="matrix-board" id="board"></div>
     </div>
 
-    <script>
-// 60行目付近にあるこの部分を書き換え
-const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxOyZZfvdOWhTfdjVlNBkDk6axBYHb6RoZU9MSGG8dlo58CU46NUfAjY1BF_-6LZAEFog/exec";
+<script>
+        const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxOyZZfvdOWhTfdjVlNBkDk6axBYHb6RoZU9MSGG8dlo58CU46NUfAjY1BF_-6LZAEFog/exec";
         let currentMode = 'official';
 
         function changeMode(mode) {
@@ -185,7 +184,7 @@ const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxOyZZfvdOWhTfdjVl
                 <div style="position:absolute; height:100%; width:1px; left:50%; top:0; background:rgba(0,0,0,0.1); z-index:1;"></div>
             `;
 
-            // 【Benchmark】山崎を中心(0,0)に「薄く」配置
+            // 【Benchmark】山崎を中心(0,0)に配置
             const benchmark = document.createElement('div');
             benchmark.className = 'bottle benchmark-bottle';
             benchmark.style.left = '50%'; benchmark.style.top = '50%';
@@ -198,31 +197,32 @@ const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxOyZZfvdOWhTfdjVl
                 bottleEl.style.left = (50 + Number(whiskey.rich)) + '%';
                 bottleEl.style.top = (50 - Number(whiskey.smoky)) + '%';
                 
-// 画像がない、または読み込めない時に「銘柄名」を大きく出す
-const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.png';
+                const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.png';
 
-bottleEl.innerHTML = `
-    <img src="${imgSrc}" 
-         style="min-height:20px; min-width:10px;" 
-         onerror="this.style.display='none'; this.nextElementSibling.style.fontSize='12px';">
-    <span class="label">${whiskey.brand}</span>
-`;
-bottleEl.onclick = () => { 
-    // 他のボトルの強調をリセット
-    document.querySelectorAll('.bottle').forEach(b => {
-        b.style.zIndex = "10";
-        b.style.transform = "translate(-50%, -50%) scale(1)";
-    });
-    
-    // 選んだボトルを最前面に出して、少し大きくする
-    bottleEl.style.zIndex = "100";
-    bottleEl.style.transform = "translate(-50%, -50%) scale(1.5)";
+                bottleEl.innerHTML = `
+                    <img src="${imgSrc}" 
+                         style="min-height:20px; min-width:10px;" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.fontSize='12px';">
+                    <span class="label">${whiskey.brand}</span>
+                `;
 
-    if(whiskey.note) {
-        // 確認をスムーズにするため、少し丁寧なアラートに
-        alert("【" + whiskey.brand + "】\n位置を確認しました。\n\nNote: " + whiskey.note); 
-    }
-};dow.onload = loadData;
+                bottleEl.onclick = () => { 
+                    document.querySelectorAll('.bottle').forEach(b => {
+                        b.style.zIndex = "10";
+                        b.style.transform = "translate(-50%, -50%) scale(1)";
+                    });
+                    bottleEl.style.zIndex = "100";
+                    bottleEl.style.transform = "translate(-50%, -50%) scale(1.5)";
+
+                    if(whiskey.note) {
+                        alert("【" + whiskey.brand + "】\n位置を確認しました。\n\nNote: " + whiskey.note); 
+                    }
+                };
+                board.appendChild(bottleEl);
+            }); // ← ここが消えていました
+        } // ← ここが消えていました
+
+        window.onload = loadData; // ← dow.onload になっていました
         setInterval(loadData, 60000); 
     </script>
 </body>
