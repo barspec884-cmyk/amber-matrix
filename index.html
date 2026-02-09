@@ -29,119 +29,61 @@
         .mode-btn.active { background: linear-gradient(to bottom, #d4af37, #a88a2d); color: #000; }
 
         .matrix-container { position: relative; margin: 40px auto 80px; }
-/* ボード：画面幅の90%を維持 */
-.matrix-board { 
-    position: relative; 
-    width: min(90vw, 620px); 
-    aspect-ratio: 1/1; 
-    border: 1px solid #d4af37;
-    background-color: #fdf5e6; 
-    background-image: 
-        linear-gradient(rgba(184, 134, 11, 0.08) 1px, transparent 1px), 
-        linear-gradient(90deg, rgba(184, 134, 11, 0.08) 1px, transparent 1px);
-    background-size: 5% 5%; 
-    box-shadow: 0 0 60px rgba(0,0,0,0.8);
-    overflow: hidden; /* ラベルやボトルがはみ出さないようにガード */
-}
+        .matrix-board { 
+            position: relative; 
+            width: min(90vw, 620px); 
+            aspect-ratio: 1/1; 
+            border: 1px solid #d4af37;
+            background-color: #fdf5e6; 
+            background-image: 
+                linear-gradient(rgba(184, 134, 11, 0.08) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(184, 134, 11, 0.08) 1px, transparent 1px);
+            background-size: 5% 5%; 
+            box-shadow: 0 0 60px rgba(0,0,0,0.8);
+            overflow: hidden; 
+        }
 
-/* ラベル共通：内側に配置するため背景を透過・ボカしに変更 */
-.axis-label {
-    position: absolute;
-    pointer-events: none; 
-    z-index: 50; /* ボトルより上に表示 */
-    color: #d4af37;
-    background: rgba(0, 0, 0, 0.6); 
-    backdrop-filter: blur(4px); /* 背景をボカして可読性アップ */
-    border: 1px solid rgba(212, 175, 55, 0.6);
-    text-transform: uppercase; 
-    letter-spacing: 2px;
-    font-size: 10px;
-}
+        .axis-label {
+            position: absolute;
+            pointer-events: none; 
+            z-index: 50; 
+            color: #d4af37;
+            background: rgba(0, 0, 0, 0.6); 
+            backdrop-filter: blur(4px); 
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            font-size: 10px;
+        }
 
-/* 上ラベル：ボードの「上枠」に埋め込む */
-.label-top { 
-    top: 0; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    padding: 3px 20px; 
-    border-radius: 0 0 10px 10px; /* 下側だけ丸くして、枠から生えているように見せる */
-    border-top: none; /* 枠線と一体化させる */
-}
+        .label-top { top: 0; left: 50%; transform: translateX(-50%); padding: 3px 20px; border-radius: 0 0 10px 10px; border-top: none; }
+        .label-bottom { bottom: 0; left: 50%; transform: translateX(-50%); padding: 3px 20px; border-radius: 10px 10px 0 0; border-bottom: none; }
+        .label-left { left: 0; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; text-orientation: upright; padding: 15px 3px; border-radius: 0 8px 8px 0; }
+        .label-right { right: 0; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; text-orientation: upright; padding: 15px 3px; border-radius: 8px 0 0 8px; }
 
-/* 下ラベル：ボードの「下枠」に埋め込む */
-.label-bottom { 
-    bottom: 0; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    padding: 3px 20px; 
-    border-radius: 10px 10px 0 0; /* 上側だけ丸くする */
-    border-bottom: none;
-}
-
-/* 左右ラベル：縦書きにしてボードの内側両端に配置 */
-.label-left { 
-    left: 0; 
-    top: 50%; 
-    transform: translateY(-50%); 
-    writing-mode: vertical-rl; 
-    text-orientation: upright;
-    padding: 15px 3px;
-    border-radius: 0 8px 8px 0;
-}
-
-.label-right { 
-    right: 0; 
-    top: 50%; 
-    transform: translateY(-50%); 
-    writing-mode: vertical-rl; 
-    text-orientation: upright;
-    padding: 15px 3px;
-    border-radius: 8px 0 0 8px;
-}
-
-/* bottleの幅を少し絞る */
-.bottle { 
-    position: absolute; 
-    transform: translate(-50%, -50%); 
-    text-align: center; 
-    width: 50px; /* 70pxから縮小 */
-    transition: all 0.5s ease; 
-    z-index: 100 !important;
-}
-
-/* 画像サイズを200件対応用に小さく */
-.bottle img { 
-    width: 25px; /* ここを40pxから25pxへ */
-    height: auto; 
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); 
-}
-
-/* ラベルの文字も少しだけ小さくして、重なりを減らす */
-.label { 
-    display: block; 
-    background: rgba(0, 0, 0, 0.85); 
-    color: #d4af37; 
-    font-size: 9px; /* 10pxから縮小 */
-    padding: 1px 4px; 
-    border-radius: 2px; 
-    margin-top: 2px; 
-    border: 1px solid rgba(212,175,55,0.3); 
-    white-space: nowrap; 
-}
-        
-        /* 【重要】Benchmark（山崎）を薄くする設定 */
+        .bottle { 
+            position: absolute; 
+            transform: translate(-50%, -50%); 
+            text-align: center; 
+            width: 50px; 
+            transition: all 0.5s ease; 
+            z-index: 10;
+        }
+        .bottle img { width: 25px; height: auto; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); }
+        .label { display: block; background: rgba(0, 0, 0, 0.85); color: #d4af37; font-size: 9px; padding: 1px 4px; border-radius: 2px; margin-top: 2px; border: 1px solid rgba(212,175,55,0.3); white-space: nowrap; }
         .benchmark-bottle { z-index: 1 !important; opacity: 0.25; filter: grayscale(0.5); pointer-events: none; }
         .benchmark-label { background: transparent !important; color: #888 !important; border: none !important; font-weight: bold; font-style: italic; }
     </style>
 </head>
+
 <body>
 
     <div class="header-title">AMBER PALETTE</div>
     <img src="logo.png" class="modest-logo" onerror="this.style.display='none'">
 
     <div class="mode-switcher">
-        <button id="btn-official" class="mode-btn active" onclick="changeMode('official')">OFFICIAL</button>
-        <button id="btn-draft" class="mode-btn" onclick="changeMode('draft')">EVERYONE'S</button>
+        <button id="btn-official" class="mode-btn" onclick="changeMode('official')">OFFICIAL</button>
+        <button id="btn-draft" class="mode-btn active" onclick="changeMode('draft')">EVERYONE'S</button>
     </div>
 
     <div class="matrix-container">
@@ -152,9 +94,9 @@
         <div class="matrix-board" id="board"></div>
     </div>
 
-<script>
+    <script>
         const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxOyZZfvdOWhTfdjVlNBkDk6axBYHb6RoZU9MSGG8dlo58CU46NUfAjY1BF_-6LZAEFog/exec";
-        let currentMode = 'official';
+        let currentMode = 'draft'; // デフォルトをEVERYONE'Sに設定
 
         function changeMode(mode) {
             currentMode = mode;
@@ -166,6 +108,7 @@
         async function loadData() {
             const board = document.getElementById('board');
             board.innerHTML = '<div style="color:#d4af37; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; letter-spacing:2px;">LOADING...</div>';
+            
             const fetchUrl = currentMode === 'official' ? `${GAS_BASE_URL}?mode=official` : GAS_BASE_URL;
 
             try {
@@ -184,7 +127,7 @@
                 <div style="position:absolute; height:100%; width:1px; left:50%; top:0; background:rgba(0,0,0,0.1); z-index:1;"></div>
             `;
 
-            // 【Benchmark】山崎を中心(0,0)に配置
+            // 【Benchmark】
             const benchmark = document.createElement('div');
             benchmark.className = 'bottle benchmark-bottle';
             benchmark.style.left = '50%'; benchmark.style.top = '50%';
@@ -219,10 +162,10 @@
                     }
                 };
                 board.appendChild(bottleEl);
-            }); // ← ここが消えていました
-        } // ← ここが消えていました
+            });
+        }
 
-        window.onload = loadData; // ← dow.onload になっていました
+        window.onload = loadData;
         setInterval(loadData, 60000); 
     </script>
 </body>
