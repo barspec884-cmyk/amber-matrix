@@ -131,7 +131,7 @@
             const benchmark = document.createElement('div');
             benchmark.className = 'bottle benchmark-bottle';
             benchmark.style.left = '50%'; benchmark.style.top = '50%';
-            benchmark.innerHTML = `<img src="JAPANESE/yamazaki.png" onerror="this.src='https://via.placeholder.com/40x80?text=YAMAZAKI'"><span class="label benchmark-label">Benchmark</span>`;
+            benchmark.innerHTML = `<img src="JAPANESE/yamazaki.webp" onerror="this.src='https://via.placeholder.com/40x80?text=YAMAZAKI'"><span class="label benchmark-label">Benchmark</span>`;
             board.appendChild(benchmark);
 
             data.forEach(whiskey => {
@@ -140,7 +140,7 @@
                 bottleEl.style.left = (50 + Number(whiskey.rich)) + '%';
                 bottleEl.style.top = (50 - Number(whiskey.smoky)) + '%';
                 
-                const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.png';
+                const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.webp';
 
                 bottleEl.innerHTML = `
                     <img src="${imgSrc}" 
