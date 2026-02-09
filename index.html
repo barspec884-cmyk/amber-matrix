@@ -106,7 +106,7 @@
     text-align: center; 
     width: 50px; /* 70pxから縮小 */
     transition: all 0.5s ease; 
-    z-index: 10; 
+    z-index: 100 !important;
 }
 
 /* 画像サイズを200件対応用に小さく */
@@ -198,8 +198,15 @@ const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxOyZZfvdOWhTfdjVl
                 bottleEl.style.left = (50 + Number(whiskey.rich)) + '%';
                 bottleEl.style.top = (50 - Number(whiskey.smoky)) + '%';
                 
-                const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.png';
-                bottleEl.innerHTML = `<img src="${imgSrc}" onerror="this.src='https://via.placeholder.com/40x80?text=BarSPEC'"><span class="label">${whiskey.brand}</span>`;
+// 画像がない、または読み込めない時に「銘柄名」を大きく出す
+const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.png';
+
+bottleEl.innerHTML = `
+    <img src="${imgSrc}" 
+         style="min-height:20px; min-width:10px;" 
+         onerror="this.style.display='none'; this.nextElementSibling.style.fontSize='12px';">
+    <span class="label">${whiskey.brand}</span>
+`;
 bottleEl.onclick = () => { 
     // 他のボトルの強調をリセット
     document.querySelectorAll('.bottle').forEach(b => {
