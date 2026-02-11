@@ -19,7 +19,7 @@
         .modest-logo:hover { opacity: 0.9; }
 
         .mode-switcher {
-            display: flex; background: rgba(212, 175, 55, 0.1); border-radius: 30px; 
+            display: flex; background: rgba(212, 175, 55, 0.1); border-radius: 4px; 
             padding: 5px; margin: 25px 0; border: 1px solid rgba(212, 175, 55, 0.4);
         }
         .mode-btn {
@@ -44,16 +44,10 @@
         }
 
         .axis-label {
-            position: absolute;
-            pointer-events: none; 
-            z-index: 50; 
-            color: #d4af37;
-            background: rgba(0, 0, 0, 0.6); 
-            backdrop-filter: blur(4px); 
+            position: absolute; pointer-events: none; z-index: 50; color: #d4af37;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); 
             border: 1px solid rgba(212, 175, 55, 0.6);
-            text-transform: uppercase; 
-            letter-spacing: 2px;
-            font-size: 10px;
+            text-transform: uppercase; letter-spacing: 2px; font-size: 10px;
         }
 
         .label-top { top: 0; left: 50%; transform: translateX(-50%); padding: 3px 20px; border-radius: 0 0 10px 10px; border-top: none; }
@@ -62,30 +56,26 @@
         .label-right { right: 0; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; text-orientation: upright; padding: 15px 3px; border-radius: 8px 0 0 8px; }
 
         .bottle { 
-            position: absolute; 
-            transform: translate(-50%, -50%); 
-            text-align: center; 
-            width: 50px; 
-            transition: all 0.5s ease; 
-            z-index: 10;
+            position: absolute; transform: translate(-50%, -50%); 
+            text-align: center; width: auto; min-width: 40px; transition: all 0.5s ease; z-index: 10;
         }
         .bottle img { width: 25px; height: auto; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); }
-        .label { display: block; background: rgba(0, 0, 0, 0.85); color: #d4af37; font-size: 9px; padding: 1px 4px; border-radius: 2px; margin-top: 2px; border: 1px solid rgba(212,175,55,0.3); white-space: nowrap; }
+        /* ラベル背景を文字数に追従させる設定 */
+        .label { 
+            display: inline-block; background: rgba(0, 0, 0, 0.85); color: #d4af37; 
+            font-size: 9px; padding: 3px 8px; border-radius: 2px; margin-top: 2px; 
+            border: 1px solid rgba(212,175,55,0.3); white-space: nowrap; 
+        }
         .benchmark-bottle { z-index: 1 !important; opacity: 0.25; filter: grayscale(0.5); pointer-events: none; }
         .benchmark-label { background: transparent !important; color: #888 !important; border: none !important; font-weight: bold; font-style: italic; }
     </style>
 </head>
-
 <body>
-
     <div class="header-title">AMBER PALETTE</div>
-    <img src="logo.png" class="modest-logo" onerror="this.style.display='none'">
-
     <div class="mode-switcher">
         <button id="btn-official" class="mode-btn" onclick="changeMode('official')">OFFICIAL</button>
         <button id="btn-draft" class="mode-btn active" onclick="changeMode('draft')">EVERYONE'S</button>
     </div>
-
     <div class="matrix-container">
         <div class="axis-label label-top">Smoky</div>
         <div class="axis-label label-bottom">Delicate</div>
@@ -95,8 +85,8 @@
     </div>
 
     <script>
-        const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxuTnB2LDQvPrscKZhR4opw9oinqVuDYSfjkWi1iSJHQI1HKla3Tvf0_0JxqC_NA63scQ/exec";
-        let currentMode = 'draft'; // デフォルト
+        const GAS_BASE_URL = "https://script.google.com/macros/s/AKfycbxOyZZfvdOWhTfdjVlNBkDk6axBYHb6RoZU9MSGG8dlo58CU46NUfAjY1BF_-6LZAEFog/exec";
+        let currentMode = 'draft';
 
         function changeMode(mode) {
             currentMode = mode;
@@ -107,14 +97,8 @@
 
         async function loadData() {
             const board = document.getElementById('board');
-            // ローディング表示（既存のボトルの上に出ないようクリアしてから表示）
-            const loading = document.createElement('div');
-            loading.id = 'loading-overlay';
-            loading.innerHTML = 'LOADING...';
-            loading.style = "color:#d4af37; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; letter-spacing:2px; z-index:1000;";
-            
+            board.innerHTML = '<div style="color:#d4af37; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; letter-spacing:2px;">LOADING...</div>';
             const fetchUrl = currentMode === 'official' ? `${GAS_BASE_URL}?mode=official` : GAS_BASE_URL;
-
             try {
                 const response = await fetch(fetchUrl);
                 const data = await response.json();
@@ -127,15 +111,13 @@
         function render(data) {
             const board = document.getElementById('board');
             board.innerHTML = `
-                <div style="position:absolute; width:100%; height:1px; top:50%; left:0; background:rgba(212,175,55,0.2); z-index:1;"></div>
-                <div style="position:absolute; height:100%; width:1px; left:50%; top:0; background:rgba(212,175,55,0.2); z-index:1;"></div>
+                <div style="position:absolute; width:100%; height:1px; top:50%; left:0; background:rgba(0,0,0,0.1); z-index:1;"></div>
+                <div style="position:absolute; height:100%; width:1px; left:50%; top:0; background:rgba(0,0,0,0.1); z-index:1;"></div>
             `;
-
-            // 【Benchmark: 山崎】を中央に固定
             const benchmark = document.createElement('div');
             benchmark.className = 'bottle benchmark-bottle';
             benchmark.style.left = '50%'; benchmark.style.top = '50%';
-            benchmark.innerHTML = `<img src="JAPANESE/yamazaki.webp" onerror="this.src='https://via.placeholder.com/40x80?text=YAMAZAKI'"><span class="label benchmark-label" style="color:#d4af37; font-weight:bold;">Benchmark (山崎)</span>`;
+            benchmark.innerHTML = `<img src="JAPANESE/yamazaki.webp" onerror="this.src='https://via.placeholder.com/40x80?text=YAMAZAKI'"><span class="label benchmark-label">Benchmark</span>`;
             board.appendChild(benchmark);
 
             data.forEach(whiskey => {
@@ -143,62 +125,16 @@
                 bottleEl.className = 'bottle';
                 bottleEl.style.left = (50 + Number(whiskey.rich)) + '%';
                 bottleEl.style.top = (50 - Number(whiskey.smoky)) + '%';
-
-                if (currentMode === 'official') {
-                    const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.webp';
-                    bottleEl.innerHTML = `
-                        <img src="${imgSrc}" style="min-height:20px; min-width:10px;" onerror="this.style.display='none';">
-                        <span class="label">${whiskey.brand}</span>
-                    `;
-                } else {
-                    bottleEl.innerHTML = `
-                        <div style="width:8px; height:8px; background:#d4af37; border-radius:50%; margin:0 auto; box-shadow:0 0 8px #d4af37;"></div>
-                        <span class="label" style="font-size:10px; opacity:0.8;">${whiskey.brand}</span>
-                    `;
-                }
-
-                bottleEl.onclick = (e) => { 
-                    e.stopPropagation(); // ボードのクリックイベントを発火させない
-                    alert(`【${whiskey.brand}】\nRich: ${whiskey.rich} / Smoky: ${whiskey.smoky}`);
-                };
+                const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.webp';
+                bottleEl.innerHTML = `
+                    <img src="${imgSrc}" style="min-height:20px; min-width:10px;" onerror="this.style.display='none';">
+                    <span class="label">${whiskey.brand}</span>
+                `;
                 board.appendChild(bottleEl);
             });
-
-            // --- 投稿機能: ボードをクリックした時 ---
-            board.onclick = function(e) {
-                if (currentMode !== 'draft') return; // EVERYONE'Sモードの時だけ投稿可能
-
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                // 座標を -50 ～ 50 に変換
-                const rich = ((x / rect.width) * 100 - 50).toFixed(1);
-                const smoky = (50 - (y / rect.height) * 100).toFixed(1);
-
-                const comment = prompt(`あなたが思う「山崎」の位置をここに登録しますか？\n(Rich: ${rich}, Smoky: ${smoky})\nコメントがあれば入力してください：`);
-                
-                if (comment !== null) {
-                    sendData(rich, smoky, comment);
-                }
-            };
         }
-
-        async function sendData(rich, smoky, comment) {
-            try {
-                const response = await fetch(GAS_BASE_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ rich, smoky, comment, user: "NetUser", brand: "山崎" })
-                });
-                alert('投稿が完了しました！承認後に反映されます。');
-                loadData();
-            } catch (e) {
-                alert('送信に失敗しました。');
-            }
-        }
-
         window.onload = loadData;
-        setInterval(loadData, 60000);
+        setInterval(loadData, 60000); 
     </script>
 </body>
 </html>
