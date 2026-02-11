@@ -140,14 +140,23 @@
                 bottleEl.style.left = (50 + Number(whiskey.rich)) + '%';
                 bottleEl.style.top = (50 - Number(whiskey.smoky)) + '%';
                 
-                const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.webp';
-
-                bottleEl.innerHTML = `
-                    <img src="${imgSrc}" 
-                         style="min-height:20px; min-width:10px;" 
-                         onerror="this.style.display='none'; this.nextElementSibling.style.fontSize='12px';">
-                    <span class="label">${whiskey.brand}</span>
-                `;
+// --- ここから切り替え処理 ---
+                if (currentMode === 'official') {
+                    // Officialモード：画像を表示
+                    const imgSrc = whiskey.image && whiskey.image !== "" ? whiskey.image : 'JAPANESE/sample-Bottle.webp';
+                    bottleEl.innerHTML = `
+                        <img src="${imgSrc}" 
+                             style="min-height:20px; min-width:10px;" 
+                             onerror="this.style.display='none'; this.nextElementSibling.style.fontSize='12px';">
+                        <span class="label">${whiskey.brand}</span>
+                    `;
+                } else {
+                    // Everyone'sモード：ドット（丸）を表示
+                    bottleEl.innerHTML = `
+                        <div style="width:8px; height:8px; background:#d4af37; border-radius:50%; margin:0 auto; box-shadow:0 0 8px #d4af37;"></div>
+                        <span class="label" style="font-size:10px; opacity:0.8;">${whiskey.brand}</span>
+                    `;
+                }
 
                 bottleEl.onclick = () => { 
                     document.querySelectorAll('.bottle').forEach(b => {
